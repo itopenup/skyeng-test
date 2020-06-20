@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.skyeng.R
+import com.skyeng.adapter.SearchResultListAdapter
 import com.skyeng.databinding.SearchFragmentBinding
 import com.skyeng.viewmodel.SearchViewModel
 
@@ -22,6 +26,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.search_fragment, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
@@ -31,6 +36,17 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.data = viewModel
+        viewLifecycleOwner.lifecycle.addObserver(viewModel)
 
+        val listAdapter = SearchResultListAdapter()
+        binding.list.apply {
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            adapter = listAdapter
+        }
+
+        viewModel.resultData.observe(viewLifecycleOwner, Observer { result ->
+            listAdapter.setData(result)
+        })
     }
 }

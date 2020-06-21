@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class SearchViewModel(private val app: App) : AndroidViewModel(app), LifecycleObserver {
+class SearchViewModel(app: App) : AndroidViewModel(app), LifecycleObserver {
     @Inject
     lateinit var externalApi: IExternalApi
 

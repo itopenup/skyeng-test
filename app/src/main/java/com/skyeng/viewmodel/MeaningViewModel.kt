@@ -1,5 +1,6 @@
 package com.skyeng.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
@@ -11,7 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MeaningViewModel(app: App) : AndroidViewModel(app), LifecycleObserver {
+class MeaningViewModel(app: Application) : AndroidViewModel(app), LifecycleObserver {
     @Inject
     lateinit var externalApi: IExternalApi
 
@@ -19,7 +20,9 @@ class MeaningViewModel(app: App) : AndroidViewModel(app), LifecycleObserver {
     var meaningDisposable: Disposable? = null
 
     init {
-        app.getApplicationComponent().inject(this)
+        if (app is App) {
+            app.getApplicationComponent().inject(this)
+        }
     }
 
     fun load(id: Int) {

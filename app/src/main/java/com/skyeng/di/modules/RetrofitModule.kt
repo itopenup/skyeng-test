@@ -24,7 +24,7 @@ class RetrofitModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://dictionary.skyeng.ru/api/public/v1")
+            .baseUrl("https://dictionary.skyeng.ru/api/public/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(httpClient)

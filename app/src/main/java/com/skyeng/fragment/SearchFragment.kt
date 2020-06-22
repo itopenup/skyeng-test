@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.skyeng.MainActivity
 import com.skyeng.R
 import com.skyeng.adapter.SearchResultListAdapter
 import com.skyeng.databinding.SearchFragmentBinding
@@ -30,8 +31,8 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
     }
 
@@ -39,7 +40,14 @@ class SearchFragment : Fragment() {
         binding.data = viewModel
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
 
-        val listAdapter = SearchResultListAdapter()
+        val listAdapter = SearchResultListAdapter(object: SearchResultListAdapter.OnMeaningClickListener {
+            override fun onClick(id: Int) {
+                val activity = requireActivity()
+                if (activity is MainActivity) {
+                    activity.navigate(MeaningFragment.newInstance(intArrayOf(id)))
+                }
+            }
+        })
         binding.list.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = listAdapter

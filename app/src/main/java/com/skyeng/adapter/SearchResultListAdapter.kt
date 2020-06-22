@@ -10,7 +10,10 @@ import com.skyeng.databinding.SearchResultListTextBinding
 import com.skyeng.databinding.SearchResultListTranslationBinding
 import com.skyeng.model.SearchResult
 
-class SearchResultListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchResultListAdapter(val onMeaningClickListener: OnMeaningClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    interface OnMeaningClickListener {
+        fun onClick(id: Int)
+    }
 
     class TextViewHolder(var binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -21,19 +24,20 @@ class SearchResultListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
         TRANSLATION
     }
 
-    class Item(val content: String, val type: ItemType)
+    class Item(val id: Int, val content: String?, val type: ItemType)
 
     private val items = mutableListOf<Item>()
 
     fun setData(data: List<SearchResult>) {
         items.clear()
         for (result in data) {
-            items.add(Item(result.text, ItemType.TEXT))
+            items.add(Item(result.id, result.text, ItemType.TEXT))
 
             for (meaning in result.meanings) {
-                items.add(Item(meaning.translation.text, ItemType.TRANSLATION))
+                items.add(Item(meaning.id, meaning.translation.text, ItemType.TRANSLATION))
             }
         }
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int = items[position].type.ordinal
@@ -55,7 +59,7 @@ class SearchResultListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             is TranslationViewHolder ->
                 (holder.binding as SearchResultListTranslationBinding).apply {
                     content = items[position].content
-                    root.setOnClickListener {  }
+                    root.setOnClickListener { onMeaningClickListener.onClick(items[position].id) }
                 }
         }
     }

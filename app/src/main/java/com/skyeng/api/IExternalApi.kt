@@ -7,11 +7,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface IExternalApi {
-    @GET("/words/search")
+    @GET("words/search")
     fun searchWords(@Query("search") search: String,
                     @Query("page") page: Int?,
                     @Query("pageSize") pageSize: Int?): Single<List<SearchResult>>
 
-    @GET("/meanings")
+    @GET("meanings")
     fun meanings(@Query("ids") ids: Array<Int>): Single<List<MeaningDetails>>
 }

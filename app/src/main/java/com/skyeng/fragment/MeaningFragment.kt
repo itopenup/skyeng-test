@@ -20,12 +20,14 @@ class MeaningFragment : Fragment() {
     lateinit var picasso: Picasso
 
     companion object {
-        fun newInstance(ids: IntArray) {
+        fun newInstance(ids: IntArray): MeaningFragment {
             val arguments = Bundle()
             arguments.putIntArray(ARG_MEANING_IDS, ids)
 
             val fragment = MeaningFragment()
             fragment.arguments = arguments
+
+            return fragment
         }
     }
 
@@ -42,7 +44,10 @@ class MeaningFragment : Fragment() {
             ids = it.getIntArray(ARG_MEANING_IDS)
         }
 
-        picasso = Picasso.Builder(requireContext()).build()
+        viewModel = ViewModelProvider(this).get(MeaningViewModel::class.java)
+        picasso = Picasso.Builder(requireContext())
+            .loggingEnabled(true)
+            .build()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,17 +56,19 @@ class MeaningFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MeaningViewModel::class.java)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycle.addObserver(viewModel)
 
         viewModel.meaningData.observe(viewLifecycleOwner, Observer { meaning ->
             binding.data = meaning
-            picasso.load(meaning.images[0].url).into(binding.image)
+
+            var imageUrl = meaning.images[0].url
+            if (imageUrl.startsWith("//")) {
+                imageUrl = "http:$imageUrl"
+            }
+            picasso
+                .load(imageUrl)
+                .into(binding.image)
         })
         ids?.let { viewModel.load(it[0]) }
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -19,7 +20,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/colorPrimaryDark"
-            android:text="@{data.text}"/>
+            android:text="@{data.text}"
+            android:textSize="36sp"/>
 
         <TextView
             android:id="@+id/translation"
@@ -29,16 +31,19 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="5dp"
             android:textColor="@color/colorAccent"
-            android:text="@{data.translation.text}"/>
+            android:text="@{data.translation.text}"
+            android:textSize="36sp"/>
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/translation"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="15dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/translation"
+            tools:src="@drawable/cat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
